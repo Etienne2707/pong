@@ -1,76 +1,57 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import Stats from 'three/addons/libs/stats.module.js';
+// import Stats from 'three/addons/libs/stats.module.js';
 
 export default class SceneInit {
-    constructor(canvasId) {
-        this.scene = undefined;
-        this.camera = undefined;
-        this.renderer = undefined;
+  constructor(canvasID, fov = 36) {
+    this.fov = fov;
+    this.canvasID = canvasID;
+  }
 
-        this.fov = 45;
-        this.nearPlane = 1;
-        this.farPlane = 1000;
-        this.canvasId = canvasId;
+  initScene() {
+    this.camera = new THREE.PerspectiveCamera(
+      this.fov,
+      window.innerWidth / window.innerHeight,
+      1,
+      1000
+    );
+    this.camera.position.z = 128;
 
-        this.clock = undefined;
-        this.stats = undefined;
-        this.controls = undefined;
+    this.scene = new THREE.Scene();
 
-        this.ambientLight = undefined;
-        this.directionalLight = undefined;
-    }
+    // const loader = new THREE.TextureLoader();
+    // loader.load('background.jpg', (texture) => {
+    // this.scene.background = texture;
+    //  });
+    const canvas = document.getElementById(this.canvasID);
 
-    initialize() {
-        this.scene = new THREE.Scene();
-        this.camera = new THREE.PerspectiveCamera(
-            this.fov,
-            window.innerWidth / window.innerHeight,
-            1,
-            1000
-        );
-        this.camera.position.set(0, 12, 35);
-    
+    this.renderer = new THREE.WebGLRenderer({
+      canvas,
+      antialias: true,
+    });
 
+    this.renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(this.renderer.domElement);
 
-        const canvas = document.getElementById(this.canvasId);
-        this.renderer = new THREE.WebGLRenderer({
-            canvas,
-            antialias: true,
-        });
-        this.renderer.setSize(window.innerWidth, window.innerHeight);
-        this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
-        document.body.appendChild(this.renderer.domElement);
+    this.controls = new OrbitControls(this.camera, this.renderer.domElement);
 
-        this.clock = new THREE.Clock();
-        this.controls = new OrbitControls(this.camera, this.renderer.domElement);
-        this.stats = Stats();
-        document.body.appendChild(this.stats.dom);
+    // if window resizes
+    window.addEventListener("resize", () => this.onWindowResize(), false);
+  }
 
-        this.ambientLight = new THREE.AmbientLight(0xffffff, 0.9);
-        this.scene.add(this.ambientLight);
+  animate() {
+    window.requestAnimationFrame(this.animate.bind(this));
+    this.render();
+    this.controls.update();
+  }
 
-        this.directionalLight = new THREE.DirectionalLight(0xffffff, 2);
-        this.directionalLight.position.set(0, 32, 64);
-        this.scene.add(this.directionalLight);
+  render() {
+    this.renderer.render(this.scene, this.camera);
+  }
 
-        window.addEventListener('resize', () => this.onWindowResize(), false);
-    }
-
-    animate() {
-        window.requestAnimationFrame(this.animate.bind(this));
-        this.render();
-        this.stats.update();
-        this.controls.update();
-    }
-
-    render() {
-        this.renderer.render(this.scene, this.camera);
-    }
-
-    onWindowResize() {
-        this.camera.aspect = window.innerWidth / window.innerHeight;
-        this.camera.updateProjectionMatrix();
-        this.renderer.setSize(window.innerWidth, window.innerHeight);
-    }
+  onWindowResize() {
+    this.camera.aspect = window.innerWidth / window.innerHeight;
+    this.camera.updateProjectionMatrix();
+    this.renderer.setSize(window.innerWidth, window.innerHeight);
+  }
 }
