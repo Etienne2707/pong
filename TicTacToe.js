@@ -68,7 +68,10 @@ export default class TicTacToe {
     }
     _hiddentiles(xOffset,yOffset) {
         const tilesgeometry = new THREE.BoxGeometry(12,12,1);
-        const tilesmaterial = new THREE.MeshNormalMaterial();
+        const tilesmaterial = new THREE.MeshNormalMaterial({
+          transparent: true,
+          opacity: 0 // Adjust the opacity as needed
+      });
         const hidden_tiles = new THREE.Mesh(tilesgeometry, tilesmaterial);
         hidden_tiles.position.x = xOffset;
         hidden_tiles.position.y = yOffset;
@@ -138,11 +141,11 @@ export default class TicTacToe {
         if (this.currentPlayer === "x") {
           this._addCross(xOffset, yOffset);
           this._updateBoardCopy(xOffset, yOffset);
-          this.currentPlayer = "o";
+          // this.currentPlayer = "o";
         } else {
           this._addCircle(xOffset, yOffset);
           this._updateBoardCopy(xOffset, yOffset);
-          this.currentPlayer = "x";
+          // this.currentPlayer = "x";
         }
       }
       checkWinConditions() {
@@ -153,15 +156,14 @@ export default class TicTacToe {
             strike = this._getStrike(64, 2, 4);
             strike.position.y = this._getOffsetY(n);
             this.winLine.add(strike);
-            this.win = 1;
-            return true ;
+            return true;
           }
           if (this._checkColumnWin(n)) {
             strike = this._getStrike(2, 64, 4);
             strike.position.x = this._getOffsetX(n);
             this.winLine.add(strike);
-            this.win = 1;
-            return true ;
+            return true;
+
           }
         }
     
@@ -169,20 +171,20 @@ export default class TicTacToe {
           strike = this._getStrike(90, 2, 4);
           strike.rotation.z = -Math.PI / 4;
           this.winLine.add(strike);
-          this.win = 1;
-          return true ;
+          return true;
+
         }
     
         if (this._bottomLeftToTopRightWin()) {
           strike = this._getStrike(90, 2, 4);
           strike.rotation.z = Math.PI / 4;
           this.winLine.add(strike);
-          this.win = 1 ;
-          return true ;
+          return true;
+
         }
       }
     
-      _getStrike(x, y, z) {
+        _getStrike(x, y, z) {
         const strikeGeometry = new THREE.BoxGeometry(x, y, z);
         const strikeMaterial = new THREE.MeshNormalMaterial();
         const strike = new THREE.Mesh(strikeGeometry, strikeMaterial);
