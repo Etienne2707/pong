@@ -20,7 +20,7 @@ export default class SceneInit {
       1,
       1000
     );
-    this.camera.position.z = 128;
+    this.camera.position.z = 175;
 
     this.scene = new THREE.Scene();
 

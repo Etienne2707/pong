@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let end_win_anim = false;
   let stop_anime = false;
   let winner_alert;
+  let draw_alert;
   const text = new Text(tictactoe.scene,"SPACE-TICTACTOE",0,40);
   const tic = new TicTacToe(tictactoe.scene);
   tictactoe.scene.add(tic.board);
@@ -22,20 +23,17 @@ document.addEventListener('DOMContentLoaded', () => {
   
   function onmousedown(event) {
       if (tic.win === 1) return ;
-
       mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
       mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
       raycaster.setFromCamera(mouse, tictactoe.camera);
       const intersects = raycaster.intersectObjects(tic.hiddenTiles.children);
-      console.log(intersects);
-      
+      console.log(intersects);   
       if (intersects.length > 0) {
         if (tic.currentPlayer === "x") {
           tic.currentPlayer = "o";
         } else {
           tic.currentPlayer = "x";
         }
-        console.log(`Player ${tic.currentPlayer} play!`);
         const xOffset = intersects[0].object.position.x;
         const yOffset = intersects[0].object.position.y;
         tic.addCrossOrCircle(xOffset, yOffset);
@@ -45,9 +43,15 @@ document.addEventListener('DOMContentLoaded', () => {
       if (tic.checkWinConditions() === true) {
         console.log(`Player ${tic.currentPlayer} wins!`);
         tic.win = 1;
-        winner_alert = new Text(tictactoe.scene,`Player ${tic.currentPlayer} wins!`,0,0)
+        tic.winner_player = tic.currentPlayer;
+        winner_alert = new Text(tictactoe.scene,`Player ${tic.winner_player} wins!`,0,0)
       }
-  }
+      if (tic._checkDrawCondition() === true && tic.win != 1) {
+        tic.draw = 1;
+        console.log("Draw");
+        draw_alert = new Text(tictactoe.scene,"DRAW !!!",0,30)
+      }
+    }
 
   const scaleUp = (obj) => {
     if (!obj) {
@@ -81,18 +85,41 @@ document.addEventListener('DOMContentLoaded', () => {
       tic.winLine.children.forEach(scaleUp);
       scaleUp(text.textMesh);
     }
-    if (tic.win === 1 && tic.winLine.children[0].scale.x >= 1) {
+  
+    if ((tic.win === 1 && tic.winLine.children[0].scale.x >= 1)){
+      end_win_anim = true;
+    }
+    if (tic.draw === 1) {
       end_win_anim = true;
     }
     if (end_win_anim) {
-        console.log(`test2 ${tic.winLine.children[0].scale.x }`)
         stop_anime = true;
         tic.board_lines.children.forEach(scaleDown);
         tic.circles.children.forEach(scaleDown);
         tic.crosses.children.forEach(scaleDown);
         tic.winLine.children.forEach(scaleDown);
         scaleDown(text.textMesh);
-        if (tic.winLine.children[0].scale.x === 0) {
+        if (tic.draw === 1) {
+          // Assurez-vous que draw_alert.textMesh n'est pas null
+          if (draw_alert.textMesh) {
+            console.log("premier truc");
+              scaleUp(draw_alert.textMesh);
+              if (draw_alert.textMesh.scale.x >= 1 && tic.board_lines.children[0].scale.x === 0) {
+                console.log("deuxieme truc");
+                  tic.draw = 0;
+                  let randomNumber = Math.random();
+                  // Utilisez Math.round() pour obtenir un chiffre 0 ou 1
+                  let randomDigit = Math.round(randomNumber);
+                  if (randomDigit === 0)
+                      tic.winner_player = "o";
+                  else
+                      tic.winner_player = "x";
+                  tic.win = 1;
+              }
+          }
+        }
+        if (tic.win === 1 && tic.winLine.children[0].scale.x === 0) {
+          console.log("On doit baisser");
           scaleUp(winner_alert.textMesh);
         }
     }
@@ -101,4 +128,4 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   animate();
-});
+});     

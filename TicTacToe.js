@@ -3,6 +3,8 @@ import * as THREE from 'three';
 export default class TicTacToe {
     constructor(scene) {
         this.win = 0;
+        this.draw = 0;
+        this.winner_player;
         this.board = new THREE.Group();
         this.board_lines =  new THREE.Group();
         this.hiddenTiles = new THREE.Group();
@@ -242,6 +244,17 @@ export default class TicTacToe {
         }
       }
 
+      _checkDrawCondition() {
+        for (let i = 0; i < 3; i++) {
+
+          for (let k = 0; k < 3 ; k++) {
+            if (this.boardCopy[i][k] != 'x' && this.boardCopy[i][k] != 'o' ) {
+              return false;
+            }
+          }
+        }
+        return true;
+      }
       _getWinStatus() {
         return this.win;
       }
