@@ -2,15 +2,16 @@ import * as THREE from 'three';
 
 export default class TicTacToe {
     constructor(scene) {
-        this.win = 0;
-        this.draw = 0;
         this.winner_player;
+        this.state = 0;
+        this.animation_state = 0;
         this.board = new THREE.Group();
         this.board_lines =  new THREE.Group();
         this.hiddenTiles = new THREE.Group();
         this.circles = new THREE.Group();
         this.crosses = new THREE.Group();
         this.winLine = new THREE.Group();
+        this.
 
         this.board.add(this.winLine);
         this.board.add(this.circles);
