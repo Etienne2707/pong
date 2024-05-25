@@ -47,12 +47,14 @@ export function end_animation(scene,text) {
     scene.crosses.children.forEach((child) => scene.animation_state = scaleDown(child, scene.animation_state));
     scene.winLine.children.forEach((child) => scene.animation_state = scaleDown(child, scene.animation_state));
     scene.animation_state = scaleDown(text.textMesh, scene.animation_state);
-    console.log(`Valeur : ${scene.animation_state}`)
+    //console.log(`Valeur : ${scene.animation_state}`)
 }
 
-export function win_animation(text) {
-
+export function win_animation(scene,text) {
+    let test;
+    scene.button.children.forEach((child) => scaleUp(child, test));
     scaleUp(text.textMesh);
+    
 }
 
 export function draw_animation(text) {

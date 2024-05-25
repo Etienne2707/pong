@@ -11,11 +11,13 @@ export default class TicTacToe {
         this.circles = new THREE.Group();
         this.crosses = new THREE.Group();
         this.winLine = new THREE.Group();
-        this.
+        this.button = new THREE.Group();
+        this.button = new THREE.Group();
 
         this.board.add(this.winLine);
         this.board.add(this.circles);
         this.board.add(this.crosses);
+        this.board.add(this.button);
         this.board.add(this.board_lines);
         this.board.add(this.hiddenTiles);
 
@@ -27,6 +29,7 @@ export default class TicTacToe {
         ];
     
         this._createBoard();
+        this._createbutton();
         //this.scene.add(this.board);
     }
 
@@ -258,6 +261,20 @@ export default class TicTacToe {
       }
       _getWinStatus() {
         return this.win;
+      }
+      _createbutton() {
+        const buttonGeometry = new THREE.BoxGeometry(24, 24, 24);
+        const buttonMaterial= new THREE.MeshNormalMaterial();
+        const firstButton = new THREE.Mesh(buttonGeometry, buttonMaterial);
+        const secondButtom = new THREE.Mesh(buttonGeometry, buttonMaterial);
+        firstButton.position.x += 24;
+        secondButtom.position.x -= 24;
+        firstButton.scale.set(0,0,0);
+        secondButtom.scale.set(0,0,0);
+        firstButton.name = 'button1';
+        secondButtom.name = 'button2';
+        this.button.add(firstButton);
+        this.button.add(secondButtom);
       }
 
 }

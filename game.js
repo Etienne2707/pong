@@ -29,10 +29,18 @@ document.addEventListener('DOMContentLoaded', () => {
       mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
       raycaster.setFromCamera(mouse, tictactoe.camera);
       if (tic.state === 1) {
-
-          const intersects = raycaster.intersectObjects(tic.hiddenTiles.children);
-          return ;
-      };
+        console.log("test");
+        const intersects = raycaster.intersectObjects(tic.button.children);
+        if (intersects.length > 0) {
+          const intersectedObject = intersects[0].object; // The first intersected object
+          if (intersectedObject.name === 'button1') {
+            window.location.href = './test.html'; // Navigate to page1
+          } else if (intersectedObject.name === 'button2') {
+            window.location.href = './index.html'; // Navigate to page2
+          }
+        }
+        return;
+      }
       const intersects = raycaster.intersectObjects(tic.hiddenTiles.children);
       console.log(intersects);   
       if (intersects.length > 0) {
@@ -61,20 +69,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const animate = () => {
     if (tic.animation_state < 2) {
-      tic.animation_state = game_animation(tic,text);
-      console.log(`Animation = ${tic.animation_state}`);
+      game_animation(tic,text);
+      if (tic.state === 1 && tic.winLine.children[0].scale.x < 1) {
+        tic.animation_state = 0;
+      }
     }
-     if (tic.state != 0 && tic.animation_state > 0) {
-       end_animation(tic,text);
-    //   if (tic.animation_state === 3) {
-    //     tictactoe.scene.remove(tic.board);
-    //     tictactoe.scene.remove(text);
-       }
+      //console.log(`Animation = ${tic.animation_state}`);
+    if (tic.state != 0 && tic.animation_state > 0) {
+        end_animation(tic,text);
+      //  if (tic.animation_state === 3) {
+      //    tictactoe.scene.remove(tic.board);
+      //    tictactoe.scene.remove(text);
+      //   }
+      }
       console.log(`${tic.animation_state}`)
-      if (tic.state === 1 && tic.animation_state > 2) {
-        win_animation(winner_alert);
-     }
-     else if (tic.state === 2 && tic.animation_state > 2) {
+      if (tic.state === 1) {
+        win_animation(tic,winner_alert);
+     } 
+     else if (tic.state === 2) {
         draw_animation(draw_alert);
      }
      requestAnimationFrame(animate);
