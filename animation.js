@@ -7,9 +7,9 @@ export function scaleUp(obj, state) {
         return state; // Retourne la valeur de state inchangée si obj est inexistant
     }
     state = 0;
-    if (obj.scale.x < 1) obj.scale.x += 0.04;
-    if (obj.scale.y < 1) obj.scale.y += 0.04;
-    if (obj.scale.z < 1) obj.scale.z += 0.04;
+    if (obj.scale.x < 1) obj.scale.x += 0.025;
+    if (obj.scale.y < 1) obj.scale.y += 0.025;
+    if (obj.scale.z < 1) obj.scale.z += 0.025;
     if (obj.scale.z >= 1) state = 1;
     return state; // Retourne la valeur de state mise à jour
 };

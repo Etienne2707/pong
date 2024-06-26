@@ -77,13 +77,16 @@ document.addEventListener('DOMContentLoaded', () => {
       //console.log(`Animation = ${tic.animation_state}`);
     if (tic.state != 0 && tic.animation_state > 0) {
         end_animation(tic,text);
+        if (tic.winLine.children[0].scale.x >= 1) {
+          tic.animation_state = 2;
+        }
       //  if (tic.animation_state === 3) {
       //    tictactoe.scene.remove(tic.board);
       //    tictactoe.scene.remove(text);
       //   }
       }
       console.log(`${tic.animation_state}`)
-      if (tic.state === 1) {
+      if (tic.state === 1 && tic.animation_state > 2) {
         win_animation(tic,winner_alert);
      } 
      else if (tic.state === 2) {
